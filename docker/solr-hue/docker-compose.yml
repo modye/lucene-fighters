@@ -1,0 +1,63 @@
+version: '3.2'
+
+networks:
+  hue:
+    driver: bridge
+
+services:
+  # nifi:
+  #   image: apache/nifi:1.7.1
+  #   container_name: nifi
+  #   ports:
+  #     - 9090:8080
+  #   networks:
+  #     - hue
+  #   volumes:
+  #     - /projets/tests:/data
+  #     - nifi-conf:/opt/nifi/nifi-1.7.1/conf
+  #     - ./database_repository:/opt/nifi/nifi-1.7.1/database_repository
+  #     - ./flowfile_repository:/opt/nifi/nifi-1.7.1/flowfile_repository
+  #     - ./content_repository:/opt/nifi/nifi-1.7.1/content_repository
+  #     - ./provenance_repository:/opt/nifi/nifi-1.7.1/provenance_repository
+  #     - ./files:/opt/datafiles
+  #   links:
+  #     - solr
+
+  solr:
+    image: solr
+    container_name: solr
+    ports:
+      - "9983:9983"
+      - "8983:8983"
+    networks:
+      - hue
+    volumes:
+      - ./data:/opt/solr/server/solr/wikipedia_shard1_replica_n1
+    entrypoint:
+      - docker-entrypoint.sh
+      - solr
+      - start
+      - -c
+      - -f
+      - -m
+      - 4g
+      - -h
+      - 192.168.3.184
+
+  hue:
+    image: gethue/hue:latest
+    hostname: hue
+    container_name: hue
+    ports:
+     - "8888:8888"
+    networks:
+      - hue
+    links:
+      - solr
+    command: ./build/env/bin/hue runserver_plus 0.0.0.0:8888
+#    command: tail -f /dev/null
+    volumes:
+      - ./hue.ini:/hue/desktop/conf/hue.ini
+
+volumes: 
+  nifi-conf:
