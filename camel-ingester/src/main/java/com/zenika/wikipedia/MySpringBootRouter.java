@@ -3,7 +3,6 @@ package com.zenika.wikipedia;
 import java.util.ArrayList;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.solr.SolrConstants;
-import static org.apache.camel.component.stax.StAXBuilder.stax;
 import org.apache.camel.util.toolbox.FlexibleAggregationStrategy;
 import org.springframework.stereotype.Component;
 
@@ -18,19 +17,24 @@ public class MySpringBootRouter extends RouteBuilder {
 
   @Override
   public void configure() {
-    from("file:/projets/tests/documents/big?noop=true")
-            .split(stax(Page.class,false))
+    from("file:{{data.input.directory}}?noop=true")
+            .split(body().tokenize("\n"))
             .streaming()
+            .parallelProcessing()
+            .threads(4)
+            .filter(new IsNotEsBulkMetaPredicate())
+            .process(new ToPage())
+            .to("{{ingest.endpoint.name}}");
             
+    from("direct:solr")
             .process(new ToSolrDocument())
             .aggregate(new FlexibleAggregationStrategy().accumulateInCollection(ArrayList.class))
-              .constant(true)
-              .completionSize(1000)
-              .completionInterval(5000)
-
+            .constant(true)
+            .completionSize(1000)
+            .completionInterval(5000)
             .setHeader(SolrConstants.OPERATION, constant(SolrConstants.OPERATION_INSERT))
             .setHeader(SolrConstants.PARAM + "commitWithin", constant(10000))
-            .to("solrCloud:localhost:8983/solr?zkHost=localhost:9983&collection=wikipedia")
+            .to("{{solr.endpoint.name}}")
             .to("log:foo")
             .end();
   }
