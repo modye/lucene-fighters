@@ -5,11 +5,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.zenika.wikipedia</groupId>
-  <artifactId>solr-indexer</artifactId>
+  <artifactId>camel-ingester</artifactId>
   <packaging>jar</packaging>
   <version>1.0-SNAPSHOT</version>
 
-  <name>Wikipedia Solr indexer</name>
+  <name>Wikipedia camel ingester</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
