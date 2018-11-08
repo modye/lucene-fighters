@@ -2,6 +2,9 @@ package com.zenika.wikipedia;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 
@@ -19,10 +22,29 @@ public class ToPage implements Processor {
   public ToPage() {
   }
 
+  @Override
   public void process(Exchange exchange) throws Exception {
-    String json = exchange.getIn().getBody(String.class);
+    Collection<String> json = exchange.getIn().getBody(Collection.class);
     
-    Page page = MAPPER.readValue(json, Page.class);
+    if (json.size() != 2) {
+      throw new IllegalStateException("Json input documents should contain a descriptor and the document itself.");
+    }
+    
+    Iterator<String> iterator = json.iterator();
+    PageDesc descriptor = MAPPER.readValue(iterator.next(), PageDesc.class);
+    Page page = MAPPER.readValue(iterator.next(), Page.class);
+
+    PageDesc.InnerDesc index = descriptor.getIndex();
+    if (index == null) {
+      throw new IllegalStateException("Cannot find document id.");            
+    }
+    
+    String id = descriptor.getIndex().getId();
+    if (id == null) {
+      throw new IllegalStateException("Cannot find document id.");      
+    }
+
+    page.setId(id);
     
     exchange.getIn().setBody(page);    
   }

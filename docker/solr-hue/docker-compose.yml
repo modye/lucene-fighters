@@ -5,32 +5,30 @@ networks:
     driver: bridge
 
 services:
-  # nifi:
-  #   image: apache/nifi:1.7.1
-  #   container_name: nifi
-  #   ports:
-  #     - 9090:8080
-  #   networks:
-  #     - hue
-  #   volumes:
-  #     - /projets/tests:/data
-  #     - nifi-conf:/opt/nifi/nifi-1.7.1/conf
-  #     - ./database_repository:/opt/nifi/nifi-1.7.1/database_repository
-  #     - ./flowfile_repository:/opt/nifi/nifi-1.7.1/flowfile_repository
-  #     - ./content_repository:/opt/nifi/nifi-1.7.1/content_repository
-  #     - ./provenance_repository:/opt/nifi/nifi-1.7.1/provenance_repository
-  #     - ./files:/opt/datafiles
-  #   links:
-  #     - solr
+  zookeeper:
+    hostname: zookeeper
+    container_name: zookeeper
+    image: 'bitnami/zookeeper:latest'
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+    networks:
+      - hue
+    ports:
+      - "2181:2181"
+    volumes:
+      - ./zookeeper:/bitnami/zookeeper
 
   solr:
     image: solr
     container_name: solr
     ports:
-      - "9983:9983"
       - "8983:8983"
     networks:
       - hue
+    links:
+      - zookeeper
+    depends_on:
+      - zookeeper
     volumes:
       - ./data:/opt/solr/server/solr/wikipedia_shard1_replica_n1
     entrypoint:
@@ -41,8 +39,10 @@ services:
       - -f
       - -m
       - 4g
+      - -z
+      - zookeeper:2181
       - -h
-      - 192.168.3.184
+      - solr
 
   hue:
     image: gethue/hue:latest
@@ -54,8 +54,8 @@ services:
       - hue
     links:
       - solr
+      - zookeeper
     command: ./build/env/bin/hue runserver_plus 0.0.0.0:8888
-#    command: tail -f /dev/null
     volumes:
       - ./hue.ini:/hue/desktop/conf/hue.ini
 

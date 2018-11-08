@@ -8,20 +8,21 @@ import java.util.List;
  */
 public class Page {
 
-  protected String wikibase_item;
-  protected String title;
-  protected String text;
-  protected String timestamp;
-  protected String create_timestamp;
-  protected double popularity_score;
-  protected List<String> template;
-  protected List<String> external_link;
-  protected List<String> outgoing_link;
-  protected int incoming_links;
-  protected List<String> category;
-  protected List<String> heading;
-  protected int text_bytes;
-  protected int version;
+  private String id;
+  private String wikibase_item;
+  private String title;
+  private String text;
+  private String timestamp;
+  private String create_timestamp;
+  private double popularity_score;
+  private List<String> template;
+  private List<String> external_link;
+  private List<String> outgoing_link;
+  private int incoming_links;
+  private List<String> category;
+  private List<String> heading;
+  private int text_bytes;
+  private int version;
   
   public String getWikibase_item() {
     return wikibase_item;
@@ -140,5 +141,11 @@ public class Page {
     this.version = version;
   }
 
-  
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
+  }
 }
