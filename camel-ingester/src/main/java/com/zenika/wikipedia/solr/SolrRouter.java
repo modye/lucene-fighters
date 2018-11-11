@@ -1,4 +1,4 @@
-package com.zenika.wikipedia;
+package com.zenika.wikipedia.solr;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
@@ -12,8 +12,10 @@ import org.apache.solr.client.solrj.request.CollectionAdminRequest;
 import org.apache.solr.client.solrj.request.schema.SchemaRequest.*;
 import org.apache.solr.common.SolrException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.*;
@@ -21,7 +23,8 @@ import java.util.*;
 /**
  * @author lboutros
  */
-//@Component
+@Component
+@Profile("solr")
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class SolrRouter extends RouteBuilder {
 

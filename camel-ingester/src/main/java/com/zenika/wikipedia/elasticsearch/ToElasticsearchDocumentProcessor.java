@@ -1,6 +1,6 @@
 package com.zenika.wikipedia.elasticsearch;
 
-import com.zenika.wikipedia.Page;
+import com.zenika.wikipedia.file.Page;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 
@@ -8,18 +8,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Parse an {@link Exchange} into an Elasticsearch document.
+ * Implements camel {@link Processor}
+ *
  * @author modye
  */
-public class ToElasticsearchDocument implements Processor {
+public class ToElasticsearchDocumentProcessor implements Processor {
 
-    public ToElasticsearchDocument() {
-    }
-
-    public void process(Exchange exchange) throws Exception {
+    @Override
+    public void process(Exchange exchange) {
         Page page = exchange.getIn().getBody(Page.class);
 
-
-        Map map = new HashMap();
+        Map<String, Object> map = new HashMap<>();
         map.put("id", page.getId());
         map.put("title", page.getTitle());
         map.put("text", page.getText());
@@ -38,5 +38,4 @@ public class ToElasticsearchDocument implements Processor {
 
         exchange.getIn().setBody(map);
     }
-
 }

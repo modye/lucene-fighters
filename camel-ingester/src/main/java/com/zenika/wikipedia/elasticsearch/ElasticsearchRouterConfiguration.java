@@ -5,8 +5,16 @@ import org.apache.camel.component.elasticsearch.ElasticsearchComponent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
+/**
+ * Configure {@link ElasticsearchComponent} used in the application.
+ * Could be done using Srpong Boot properties.
+ *
+ * @author modye
+ */
 @Configuration
+@Profile("elasticsearch")
 public class ElasticsearchRouterConfiguration {
 
     @Bean
