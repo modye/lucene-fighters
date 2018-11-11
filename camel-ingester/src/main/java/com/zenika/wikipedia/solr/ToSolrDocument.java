@@ -13,6 +13,7 @@ public class ToSolrDocument implements Processor {
     public ToSolrDocument() {
     }
 
+    @Override
     public void process(Exchange exchange) throws Exception {
         Page page = exchange.getIn().getBody(Page.class);
 

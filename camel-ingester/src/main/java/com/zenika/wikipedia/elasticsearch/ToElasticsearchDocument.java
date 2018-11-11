@@ -13,7 +13,7 @@ import java.util.Map;
  *
  * @author modye
  */
-public class ToElasticsearchDocumentProcessor implements Processor {
+public class ToElasticsearchDocument implements Processor {
 
     @Override
     public void process(Exchange exchange) {

@@ -21,32 +21,16 @@ import java.util.ArrayList;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class ElasticsearchRouter extends RouteBuilder {
 
-    private String ingestEndpoint;
-    private String indexName;
-    private String documentType;
-
-    /**
-     * Constructor, inject Spring beans.
-     */
-    public ElasticsearchRouter(CamelContext context,
-                               @Value("${ingest.endpoint.name}") String ingestEndpoint,
-                               @Value("${ingest.index.name}") String indexName,
-                               @Value("${ingest.document.type}") String documentType) {
-        super(context);
-        this.ingestEndpoint = ingestEndpoint;
-        this.indexName = indexName;
-        this.documentType = documentType;
-    }
-
-    @Override
-    public void configure() {
-        from(ingestEndpoint)
-                .process(new ToElasticsearchDocumentProcessor())
-                .aggregate(new FlexibleAggregationStrategy().accumulateInCollection(ArrayList.class))
-                .constant(true)
-                .completionSize(1000)
-                .completionInterval(5000)
-                .to("elasticsearch-rest://elasticsearch?operation=BULK&indexName=" + indexName + "&indexType=" + documentType)
-                .end();
-    }
+  @Override
+  public void configure() {
+    from("seda:es?size=10000&concurrentConsumers=4")
+            .process(new ToElasticsearchDocument())
+            .aggregate(new FlexibleAggregationStrategy().accumulateInCollection(ArrayList.class))
+            .constant(true)
+            .completionSize(1000)
+            .completionInterval(5000)
+            .log(simple("Sending ${body.size()} documents to ES (~${exchangeProperty.CamelSplitIndex} lines processed)").getText())
+            .to("elasticsearch-rest://elasticsearch?operation=BULK&indexName={{ingest.index.name}}&indexType={{ingest.document.type}}&hostAddresses={{elasticsearch.host.addresses}}")
+            .end();
+  }
 }

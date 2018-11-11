@@ -109,8 +109,27 @@
             </goals>
           </execution>
         </executions>
+        <configuration>
+          <profiles>
+            <profile>${spring.profiles.active}</profile>
+          </profiles>
+        </configuration>
       </plugin>
     </plugins>
   </build>
 
+  <profiles>
+    <profile>
+      <id>elasticsearch</id>
+      <properties>
+        <spring.profiles.active>elasticsearch</spring.profiles.active>
+      </properties>
+    </profile>
+    <profile>
+      <id>solr</id>
+      <properties>
+        <spring.profiles.active>solr</spring.profiles.active>
+      </properties>
+    </profile>
+  </profiles>
 </project>
