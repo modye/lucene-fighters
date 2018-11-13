@@ -38,7 +38,7 @@ services:
       - -c
       - -f
       - -m
-      - 4g
+      - 2g
       - -z
       - zookeeper:2181
       - -h
