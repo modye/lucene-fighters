@@ -1,0 +1,6 @@
+http://localhost:8983/solr/wikipedia/select?defType=dismax&q=scoubidou&qf=text%20title%20heading%20category
+
+http://localhost:8983/solr/wikipedia/select?defType=dismax&q=scoubidou%20s%C3%A9rie&qf=text%20title%20heading%20category
+
+http://localhost:8983/solr/wikipedia/select?defType=dismax&q=scoubidou%20s%C3%A9rie&qf=text%20title^3%20heading%20category
+

@@ -1,0 +1,22 @@
++title:scoubidou +create_timestamp:[2000-01-01T00\:00\:19.528Z TO 2018-11-11T22\:13\:19.528Z]
+
+json.facet={
+  date-histo : {
+    type : range,
+    field : create_timestamp,
+    start : "2000-01-01T00\:00\:19.528Z",
+    end : "2018-11-11T22\:13\:19.528Z",
+    gap : "+1YEAR",
+    facet:{
+      per-heading:{
+        type: terms,
+        field: heading,
+        limit: 5
+      }
+    }    
+  }
+}
+
+http://localhost:8983/solr/wikipedia/select?json.facet={%20%20%20date-histo%20:%20{%20%20%20%20%20type%20:%20range,%20%20%20%20%20field%20:%20create_timestamp,%20%20%20%20%20start%20:%20%222000-01-01T00\:00\:19.528Z%22,%20%20%20%20%20end%20:%20%222018-11-11T22\:13\:19.528Z%22,%20%20%20%20%20gap%20:%20%22+1YEAR%22,%20%20%20%20%20facet:{%20%20%20%20%20%20%20per-heading:{%20%20%20%20%20%20%20%20%20type:%20terms,%20%20%20%20%20%20%20%20%20field:%20heading,%20%20%20%20%20%20%20%20%20limit:%205%20%20%20%20%20%20%20}%20%20%20%20%20}%20%20%20%20%20%20%20}%20}&q=+title:scoubidou%20+create_timestamp:[2000-01-01T00\:00\:19.528Z%20TO%202018-11-11T22\:13\:19.528Z]&rows=0
+
+
