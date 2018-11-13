@@ -129,3 +129,6 @@ nbdist/
 # End of https://www.gitignore.io/api/java,maven,netbeans,intellij
 docker/solr-hue/data
 docker/solr-hue/zookeeper
+camel-ingester/.idea/**
+camel-ingester/*.iml
+.DS_Store
