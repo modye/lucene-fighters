@@ -127,4 +127,5 @@ nbdist/
 .nb-gradle/
 
 # End of https://www.gitignore.io/api/java,maven,netbeans,intellij
-
+docker/solr-hue/data
+docker/solr-hue/zookeeper
