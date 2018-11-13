@@ -19,10 +19,11 @@ services:
       - ./zookeeper:/bitnami/zookeeper
 
   solr:
-    image: solr
+    image: solr:7.5-alpine
     container_name: solr
     ports:
       - "8983:8983"
+      - "8993:8993"
     networks:
       - hue
     links:
@@ -30,7 +31,7 @@ services:
     depends_on:
       - zookeeper
     volumes:
-      - ./data:/opt/solr/server/solr/wikipedia_shard1_replica_n1
+      - ./solr-home:/opt/solr/server/solr
     entrypoint:
       - docker-entrypoint.sh
       - solr
@@ -43,6 +44,8 @@ services:
       - zookeeper:2181
       - -h
       - solr
+      - -a
+      - -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8993
 
   hue:
     image: gethue/hue:latest
